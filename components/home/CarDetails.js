@@ -2,12 +2,13 @@ import Wheel from '@/assets/images/wheel.png';
 import { Check } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
+import TrailerSpecifications from './TrailerSpecifications';
 
 const CarDetails = () => {
   return (
     <div>
       <div className="container">
-        <div className="grid grid-cols-1 xl:grid-cols-2 gap-20 items-center mb-12">
+        <div className="grid grid-cols-1 xl:grid-cols-2 gap-10 lg:gap-16 xl:gap-20 items-center mb-12">
           <div className="">
             <Image src={Wheel} alt="rental" className="w-full" />
           </div>
@@ -62,7 +63,7 @@ const CarDetails = () => {
             </div>
           </div>
         </div>
-        {/* <TrailerSpecifications /> */}
+        <TrailerSpecifications />
       </div>
     </div>
   );

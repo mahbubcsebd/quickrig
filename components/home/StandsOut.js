@@ -13,7 +13,7 @@ const StandsOut = () => {
             buttonVariant="outline"
             buttonColor="#000"
           />
-          <div className="video-box h-[560px] rounded-lg overflow-hidden">
+          <div className="video-box h-[320px] lg:[400px] xl:h-[560px] rounded-lg overflow-hidden">
             <VideoPlayer videoUrl="https://www.youtube.com/watch?v=KLuTLF3x9sA" />
           </div>
         </div>

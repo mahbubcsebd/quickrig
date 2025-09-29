@@ -4,7 +4,7 @@ import SearchBar from './SearchBar';
 
 const Hero = () => {
   return (
-    <div className="hero relative m-4 h-[660px] rounded-lg overflow-hidden">
+    <div className="hero relative md:m-4 h-screen md:h-[500px] lg:h-[660px] md:rounded-lg">
       {/* Background Image */}
       <Image
         src={HeroIMage}

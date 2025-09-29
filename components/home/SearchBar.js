@@ -2,7 +2,8 @@
 
 import { Autocomplete, useLoadScript } from '@react-google-maps/api';
 import { Calendar, MapPin, Search } from 'lucide-react';
-import { useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { useEffect, useRef, useState } from 'react';
 import { DateRange } from 'react-date-range';
 import 'react-date-range/dist/styles.css';
 import 'react-date-range/dist/theme/default.css';
@@ -10,8 +11,10 @@ import 'react-date-range/dist/theme/default.css';
 const libraries = ['places'];
 
 export default function SearchBar() {
+  const router = useRouter();
   const [location, setLocation] = useState('');
   const [autocomplete, setAutocomplete] = useState(null);
+  const calendarRef = useRef(null);
 
   // initial today → today
   const today = new Date();
@@ -30,6 +33,23 @@ export default function SearchBar() {
     libraries,
   });
 
+  // Close calendar when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (calendarRef.current && !calendarRef.current.contains(event.target)) {
+        setShowCalendar(false);
+      }
+    };
+
+    if (showCalendar) {
+      document.addEventListener('mousedown', handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [showCalendar]);
+
   const onLoad = (auto) => setAutocomplete(auto);
 
   const onPlaceChanged = () => {
@@ -37,6 +57,14 @@ export default function SearchBar() {
       const place = autocomplete.getPlace();
       setLocation(place.formatted_address || place.name);
     }
+  };
+
+  // Format date without day name (MM/DD/YYYY)
+  const formatDate = (date) => {
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    const year = date.getFullYear();
+    return `${month}/${day}/${year}`;
   };
 
   // 📍 Current Location Button
@@ -87,20 +115,52 @@ export default function SearchBar() {
     );
   };
 
+  // Handle date change and close calendar after selection
+  const handleDateChange = (item) => {
+    setDateRange([item.selection]);
+  };
+
+  // Close calendar when both dates are selected
+  useEffect(() => {
+    if (dateRange[0].startDate && dateRange[0].endDate) {
+      const startTime = dateRange[0].startDate.getTime();
+      const endTime = dateRange[0].endDate.getTime();
+
+      // Check if both dates are set and different (or if same date selected twice)
+      if (startTime !== endTime) {
+        const timer = setTimeout(() => {
+          setShowCalendar(false);
+        }, 300);
+
+        return () => clearTimeout(timer);
+      }
+    }
+  }, [dateRange]);
+
   const handleSearch = () => {
-    console.log({
-      location,
-      startDate: dateRange[0].startDate,
-      endDate: dateRange[0].endDate,
-    });
+    // Format dates as YYYY-MM-DD
+    const startDate = dateRange[0].startDate.toISOString().split('T')[0];
+    const endDate = dateRange[0].endDate.toISOString().split('T')[0];
+
+    // Create query parameters
+    const params = new URLSearchParams();
+
+    if (location) {
+      params.append('location', location);
+    }
+    params.append('startDate', startDate);
+    params.append('endDate', endDate);
+
+    // Navigate to rent-equipment page with query parameters
+    router.push(`/rent-equipment?${params.toString()}`);
   };
 
   if (!isLoaded) return <p>Loading...</p>;
 
   return (
-    <div className="relative flex w-full max-w-5xl mx-auto bg-white rounded-md shadow-md p-6 gap-4 items-end">
+    <div className="relative flex flex-col lg:flex-row  w-full max-w-5xl mx-auto bg-white rounded-md shadow-md p-6 gap-4 items-end">
       {/* Where */}
-      <div className="flex-1 text-left">
+      <div className="flex-1 text-left w-full">
         <label className="text-base text-black font-normal mb-1 block">
           Where
         </label>
@@ -125,7 +185,7 @@ export default function SearchBar() {
       </div>
 
       {/* When */}
-      <div className="flex-1 text-left">
+      <div className="flex-1 text-left w-full relative" ref={calendarRef}>
         <label className="text-base text-black font-normal mb-1 block">
           When
         </label>
@@ -134,17 +194,17 @@ export default function SearchBar() {
           onClick={() => setShowCalendar(!showCalendar)}
         >
           <span className="text-gray-700">
-            {dateRange[0].startDate.toDateString()} -{' '}
-            {dateRange[0].endDate.toDateString()}
+            {formatDate(dateRange[0].startDate)} -{' '}
+            {formatDate(dateRange[0].endDate)}
           </span>
           <Calendar size={18} className="text-gray-400" />
         </div>
 
         {showCalendar && (
-          <div className="absolute top-14 left-0 z-50 bg-white shadow-lg rounded-sm">
+          <div className="absolute top-full left-0 z-50 bg-white shadow-lg rounded-sm mt-2">
             <DateRange
               editableDateInputs={true}
-              onChange={(item) => setDateRange([item.selection])}
+              onChange={handleDateChange}
               moveRangeOnFirstSelection={false}
               ranges={dateRange}
             />
@@ -155,9 +215,10 @@ export default function SearchBar() {
       {/* Search button */}
       <button
         onClick={handleSearch}
-        className="w-[50px] h-[50px] flex justify-center items-center text-white rounded-sm bg-[#CF9645]"
+        className="lg:w-[50px] h-[50px] flex justify-center items-center text-white rounded-sm bg-[#CF9645] hover:bg-[#b8843d] transition-colors duration-200 w-full gap-2"
       >
         <Search size={20} className="text-white" />
+        <span className="lg:hidden">Search</span>{' '}
       </button>
     </div>
   );

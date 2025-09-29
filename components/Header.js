@@ -10,7 +10,7 @@ import {
   SheetTrigger,
 } from '@/components/ui/sheet';
 import clsx from 'clsx';
-import { Home, LogOut, Menu, User } from 'lucide-react';
+import { Home, Menu, User } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
@@ -34,7 +34,7 @@ const Header = () => {
     { icon: Home, label: 'About Us', href: '/about-us' },
     { icon: Home, label: 'Rent Equipment', href: '/rent-equipment' },
     { icon: Home, label: 'Chat', href: '/chat' },
-    { icon: Home, label: ' Becaome a Host', href: '/become-a-host' },
+    { icon: Home, label: ' Become a Host', href: '/become-a-host' },
     { icon: Home, label: 'Become a Guest', href: '/become a guest' },
     { icon: Home, label: 'My Profile', href: '/profile' },
   ];
@@ -110,12 +110,12 @@ const Header = () => {
                         <Link
                           key={index}
                           href={item.href}
-                          className="relative flex items-center px-3 py-3 text-sm rounded-lg transition-colors duration-300 group overflow-hidden"
+                          className="relative flex items-center p-1 md:p-2 lg:p-3 text-sm rounded-lg transition-colors duration-300 group overflow-hidden"
                           onClick={() => setIsOpen(false)}
                         >
                           <span className="relative h-8 flex items-center overflow-hidden">
                             {/* Default Text */}
-                            <span className="block font-bold text-[28px] text-black transform transition-transform duration-300 group-hover:-translate-y-full">
+                            <span className="block font-bold text-xl md:text-2xl: xl:text-[28px] text-black transform transition-transform duration-300 group-hover:-translate-y-full">
                               {item.label}
                             </span>
                             {/* Hover Text (orange) */}
@@ -129,15 +129,21 @@ const Header = () => {
                   </nav>
 
                   <Separator />
-                  <div className="p-6 pt-4">
-                    <Button
-                      variant="outline"
-                      className="w-full justify-start"
+                  <div className="p-6 pt-4 grid grid-cols-2 gap-4">
+                    <Link
+                      href="/sign-up"
+                      className="w-full px-6 py-2 text-base text-black border border-black rounded-md hover:bg-black hover:text-white transition-all duration-200 inline-block text-center"
                       onClick={() => setIsOpen(false)}
                     >
-                      <LogOut className="h-4 w-4 mr-2" />
-                      Sign out
-                    </Button>
+                      Sign Up
+                    </Link>
+                    <Link
+                      href="/login"
+                      className="w-full px-6 py-2 text-base text-black border border-black rounded-md hover:bg-black hover:text-white transition-all duration-200 inline-block text-center"
+                      onClick={() => setIsOpen(false)}
+                    >
+                      Log In
+                    </Link>
                   </div>
                 </div>
               </SheetContent>

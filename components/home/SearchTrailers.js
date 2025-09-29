@@ -59,7 +59,7 @@ const SearchTrailers = () => {
               <li key={state.id}>
                 <Link
                   href={`/state/${state.slug}`}
-                  className="text-black text-[22px] font-medium flex items-center gap-2 bg-[#FAFAFA] p-4 w-full rounded-md"
+                  className="text-black text-lg lg:text-[22px] font-medium flex items-center gap-2 bg-[#FAFAFA] p-4 w-full rounded-md"
                 >
                   {state.title} <MoveRight className="w-4 h-4 mt-1" />
                 </Link>

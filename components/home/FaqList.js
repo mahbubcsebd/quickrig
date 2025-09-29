@@ -5,6 +5,7 @@ import {
   AccordionTrigger,
 } from '@/components/ui/accordion';
 import { Minus, Plus } from 'lucide-react';
+import TopTitle from '../TopTitle';
 
 const FaqList = () => {
   const guestFAQs = [
@@ -79,11 +80,7 @@ const FaqList = () => {
   return (
     <div className="py-16 lg:py-[120px]">
       <div className="max-w-6xl mx-auto px-8">
-        <div className="mb-[60px] text-center">
-          <h2 className="text-[#08001E] text-[48px] font-bold">
-            Frequently Asked Questions
-          </h2>
-        </div>
+        <TopTitle title="Frequently Asked Questions" align="center" />
 
         <div className="grid md:grid-cols-2 gap-12">
           {/* Guests Section */}

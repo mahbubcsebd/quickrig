@@ -1,11 +1,19 @@
+'use client';
+
 import {
   default as BlogImg1,
   default as BlogImg4,
 } from '@/assets/images/blog-1.png';
 import BlogImg2 from '@/assets/images/blog-2.png';
 import BlogImg3 from '@/assets/images/blog-3.png';
-import Link from 'next/link';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { Navigation } from 'swiper/modules';
+import { Swiper, SwiperSlide } from 'swiper/react';
 import SingleFeaturedLocation from './SingleFeaturedLocation';
+
+// Import Swiper styles
+import 'swiper/css';
+import 'swiper/css/navigation';
 
 const FeaturedLocations = () => {
   const locations = [
@@ -38,33 +46,78 @@ const FeaturedLocations = () => {
         'Music City, hot chicken, honky-tonks, and pure Southern fun.',
       slug: 'dallas',
     },
+    {
+      id: 5,
+      image: BlogImg1,
+      title: 'Atlanta',
+      description: 'Hotlanta has southern charm, and endless trees!',
+      slug: 'atlanta',
+    },
+    {
+      id: 6,
+      image: BlogImg2,
+      title: 'Phoenix',
+      description: 'Desert vibes, and epic sunsets Phoenix brings the heat!',
+      slug: 'phoenix',
+    },
   ];
 
   return (
     <div className="mb-16 lg:mb-[120px]">
       <div className="py-16 lg:py-[120px] bg-[#FAFAFA]">
         <div className="container mx-auto px-4">
-          <div className="mb-[60px]">
-            <div className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-6 lg:gap-16">
-              <div className="max-w-[900px]">
-                <h2 className="text-[#08001E] text-[32px] md:text-[48px] font-bold mb-4">
+          <div className="mb-8 md:mb-12 lg:mb-[60px]">
+            <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4 md:gap-6 lg:gap-16">
+              <div className="w-full sm:max-w-[600px] lg:max-w-[900px]">
+                <h2 className="text-[#08001E] text-3xl md:text-4xl lg:text-5xl xl:text-[48px] font-bold capitalize leading-tight">
                   Featured Locations
                 </h2>
               </div>
-              <Link
-                href="/"
-                className="text-lg md:text-xl text-white font-medium bg-[#CF9645] hover:bg-[#B8844A] transition-colors px-6 md:px-8 py-3 md:py-4 rounded flex justify-center items-center gap-2 whitespace-nowrap w-fit"
-              >
-                View All
-              </Link>
+
+              {/* Custom Navigation Buttons */}
+              <div className="flex items-center gap-3 sm:flex-shrink-0">
+                <button className="location-swiper-button-prev w-10 h-10 md:w-12 md:h-12 flex items-center justify-center border-2 border-[#CF9645] text-[#CF9645] hover:bg-[#CF9645] hover:text-white transition-all duration-300 rounded">
+                  <ChevronLeft className="w-5 h-5 md:w-6 md:h-6" />
+                </button>
+                <button className="location-swiper-button-next w-10 h-10 md:w-12 md:h-12 flex items-center justify-center bg-[#CF9645] text-white hover:bg-[#B8844A] transition-all duration-300 rounded">
+                  <ChevronRight className="w-5 h-5 md:w-6 md:h-6" />
+                </button>
+              </div>
             </div>
           </div>
 
-          {/* Location Cards Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8">
-            {locations.map((location) => (
-              <SingleFeaturedLocation key={location.id} location={location} />
-            ))}
+          {/* Location Cards Swiper */}
+          <div className="featured-locations-slider">
+            <Swiper
+              modules={[Navigation]}
+              spaceBetween={32}
+              slidesPerView={1}
+              navigation={{
+                prevEl: '.location-swiper-button-prev',
+                nextEl: '.location-swiper-button-next',
+              }}
+              breakpoints={{
+                640: {
+                  slidesPerView: 2,
+                  spaceBetween: 24,
+                },
+                1024: {
+                  slidesPerView: 3,
+                  spaceBetween: 32,
+                },
+                1280: {
+                  slidesPerView: 4,
+                  spaceBetween: 32,
+                },
+              }}
+              className="location-swiper"
+            >
+              {locations.map((location) => (
+                <SwiperSlide key={location.id}>
+                  <SingleFeaturedLocation location={location} />
+                </SwiperSlide>
+              ))}
+            </Swiper>
           </div>
         </div>
       </div>

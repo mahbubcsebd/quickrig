@@ -255,3 +255,30 @@
     }
   }
 }
+
+.featured-locations-slider .swiper-slide {
+  height: auto;
+}
+
+/* Disable navigation buttons when at start/end */
+.location-swiper-button-prev.swiper-button-disabled,
+.location-swiper-button-next.swiper-button-disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.location-swiper-button-prev.swiper-button-disabled:hover {
+  background-color: transparent;
+  color: #cf9645;
+}
+
+.location-swiper-button-next.swiper-button-disabled:hover {
+  background-color: #cf9645;
+}
+
+.footer-divider {
+  background: rgba(255, 255, 255, 0.1);
+  width: 120px;
+  height: 1px;
+  margin: 24px 0;
+}

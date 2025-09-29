@@ -6,12 +6,12 @@ const OurStory = () => {
     <div className="my-10 lg:my-[120px]">
       <div className="rental">
         <div className="container">
-          <div className="grid grid-cols-1 xl:grid-cols-2 gap-20 items-center">
+          <div className="grid grid-cols-1 xl:grid-cols-2 gap-10 lg:gap-16 xl:gap-20 items-center">
             <div className="">
               <Image src={RentalImg} alt="rental" className="w-full" />
             </div>
             <div className="">
-              <h2 className="text-[#020D0A] text-[42px] font-semibold mb-4">
+              <h2 className="text-[#020D0A] text-[30px]  md:text-[32px] lg:text-[36px] xl:text-[42px] font-semibold mb-4">
                 Our Story
               </h2>
               <p className="text-[#353D3B] text-base font-normal mb-6">

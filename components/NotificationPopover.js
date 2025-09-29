@@ -63,7 +63,7 @@ export default function NotificationPopover() {
             >
               <div className="flex-1 flex items-start gap-3">
                 <div className="shrink-0 text-[#181D27] pt-1">{item.icon}</div>
-                <div className="flex flex-col flex-1">
+                <div className="flex flex-col flex-1 min-w-[120px]">
                   <span className="text-sm font-medium text-[#181D27]">
                     {item.title}
                   </span>
@@ -72,7 +72,7 @@ export default function NotificationPopover() {
                   </span>
                 </div>
               </div>
-              <div className="text-sm text-[#535862] font-normal whitespace-nowrap">
+              <div className="text-sm text-[#535862] font-normal">
                 {item.action}
               </div>
             </div>
