@@ -34,6 +34,7 @@ const Header = () => {
     { icon: Home, label: 'About Us', href: '/about-us' },
     { icon: Home, label: 'Rent Equipment', href: '/rent-equipment' },
     { icon: Home, label: 'Chat', href: '/chat' },
+    { icon: Home, label: 'Checkout', href: '/checkout' },
     { icon: Home, label: ' Become a Host', href: '/become-a-host' },
     { icon: Home, label: 'Become a Guest', href: '/become a guest' },
     { icon: Home, label: 'My Profile', href: '/profile' },

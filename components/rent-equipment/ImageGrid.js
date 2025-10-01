@@ -12,6 +12,8 @@ const ImageGrid = ({ images }) => {
               src={image.src}
               alt={image.alt}
               className="w-full h-[320px] object-cover group-hover:scale-105 transition-transform duration-500"
+              width={800}
+              height={1000}
             />
           </div>
         </div>
