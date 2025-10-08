@@ -288,3 +288,7 @@
   height: 1px;
   margin: 24px 0;
 }
+
+button {
+  cursor: pointer;
+}

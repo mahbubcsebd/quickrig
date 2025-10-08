@@ -1,12 +1,15 @@
 import Footer from '@/components/Footer';
 import Header from '@/components/Header';
+import { AuthModalProvider } from '@/providers/AuthModalProvider';
 
 const RootLayout = ({ children }) => {
   return (
     <>
-      <Header />
-      {children}
-      <Footer />
+      <AuthModalProvider>
+        <Header />
+        {children}
+        <Footer />
+      </AuthModalProvider>
     </>
   );
 };

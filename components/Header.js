@@ -15,6 +15,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import NotificationPopover from './NotificationPopover';
+import { AuthButton } from './auth-modal/AuthButton';
 
 const Header = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -32,7 +33,7 @@ const Header = () => {
   const navigationItems = [
     { icon: Home, label: 'Home', href: '/' },
     { icon: Home, label: 'About Us', href: '/about-us' },
-    { icon: Home, label: 'Rent Equipment', href: '/rent-equipment' },
+    { icon: Home, label: 'Rent Equipment', href: '/products' },
     { icon: Home, label: 'Chat', href: '/chat' },
     { icon: Home, label: 'Checkout', href: '/checkout' },
     { icon: Home, label: ' Become a Host', href: '/become-a-host' },
@@ -130,21 +131,26 @@ const Header = () => {
                   </nav>
 
                   <Separator />
-                  <div className="p-6 pt-4 grid grid-cols-2 gap-4">
-                    <Link
-                      href="/sign-up"
+                  <div className="flex gap-4 justify-center flex-wrap">
+                    <AuthButton tab="login" />
+                    <AuthButton tab="signup" />
+                  </div>
+                  <div
+                    className="p-6 pt-4 grid grid-cols-2 gap-4"
+                    onClick={() => setIsOpen(false)}
+                  >
+                    <AuthButton
+                      tab="signup"
                       className="w-full px-6 py-2 text-base text-black border border-black rounded-md hover:bg-black hover:text-white transition-all duration-200 inline-block text-center"
-                      onClick={() => setIsOpen(false)}
                     >
                       Sign Up
-                    </Link>
-                    <Link
-                      href="/login"
+                    </AuthButton>
+                    <AuthButton
+                      tab="login"
                       className="w-full px-6 py-2 text-base text-black border border-black rounded-md hover:bg-black hover:text-white transition-all duration-200 inline-block text-center"
-                      onClick={() => setIsOpen(false)}
                     >
                       Log In
-                    </Link>
+                    </AuthButton>
                   </div>
                 </div>
               </SheetContent>
