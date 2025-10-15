@@ -29,7 +29,8 @@ export default function SearchBar() {
   const [showCalendar, setShowCalendar] = useState(false);
 
   const { isLoaded } = useLoadScript({
-    googleMapsApiKey: 'AIzaSyDJJvJZcfiTHmbA5GxFE45gGy4vSYS26UU',
+    googleMapsApiKey: 'AIzaSyBLsfAvQX6j_mF_ElU3oelgLFokalRnUxM',
+    // googleMapsApiKey: 'AIzaSyDJJvJZcfiTHmbA5GxFE45gGy4vSYS26UU',
     libraries,
   });
 
