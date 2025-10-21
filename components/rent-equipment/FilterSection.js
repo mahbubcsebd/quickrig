@@ -1,5 +1,7 @@
 'use client';
 
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
 import {
   Select,
   SelectContent,
@@ -7,63 +9,103 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { ChevronDown, Search, X } from 'lucide-react';
+import { Search } from 'lucide-react';
+import { useRouter, useSearchParams } from 'next/navigation';
+import { useState } from 'react';
 
-const FilterSection = ({
-  filters,
-  setFilters,
-  showSearchInput,
-  setShowSearchInput,
-}) => {
-  const priceOptions = [
-    { value: 'under50k', label: 'Under $50k' },
-    { value: '50k-100k', label: '$50k - $100k' },
-    { value: 'over100k', label: 'Over $100k' },
+const FilterSection = () => {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+
+  // Initialize filters from URL
+  const [filters, setFilters] = useState({
+    keyword: searchParams.get('keyword') || '',
+    min_price: searchParams.get('min_price') || '',
+    max_price: searchParams.get('max_price') || '',
+    trailer_type_id: searchParams.get('trailer_type_id') || '',
+  });
+
+  const priceRanges = [
+    { value: '0-50', label: 'Under $50', min: 0, max: 50 },
+    { value: '50-100', label: '$50 - $100', min: 50, max: 100 },
+    { value: '100-200', label: '$100 - $200', min: 100, max: 200 },
+    { value: '200-500', label: '$200 - $500', min: 200, max: 500 },
+    { value: '500+', label: 'Over $500', min: 500, max: 10000 },
   ];
 
-  const typeOptions = [
-    { value: 'truck', label: 'Truck' },
-    { value: 'equipment', label: 'Equipment' },
-    { value: 'service', label: 'Service' },
+  const trailerTypes = [
+    { value: '1', label: 'Utility Trailer' },
+    { value: '2', label: 'Cargo Trailer' },
+    { value: '3', label: 'Flatbed Trailer' },
+    { value: '4', label: 'Equipment Trailer' },
+    { value: '5', label: 'Car Hauler' },
   ];
 
-  const locationOptions = [
-    { value: 'new-york', label: 'New York' },
-    { value: 'california', label: 'California' },
-    { value: 'texas', label: 'Texas' },
-    { value: 'florida', label: 'Florida' },
-    { value: 'nevada', label: 'Nevada' },
-    { value: 'arizona', label: 'Arizona' },
-    { value: 'colorado', label: 'Colorado' },
-    { value: 'utah', label: 'Utah' },
-    { value: 'oregon', label: 'Oregon' },
-  ];
+  // Update URL when filters change
+  const updateURL = (newFilters) => {
+    const params = new URLSearchParams(searchParams);
 
-  const handleSearchToggle = () => {
-    setShowSearchInput(!showSearchInput);
-    if (showSearchInput) {
-      setFilters((prev) => ({ ...prev, search: '' }));
+    // Remove empty parameters
+    Object.keys(newFilters).forEach((key) => {
+      if (newFilters[key]) {
+        params.set(key, newFilters[key]);
+      } else {
+        params.delete(key);
+      }
+    });
+
+    // Always reset to page 1 when filters change
+    params.set('page', '1');
+
+    router.push(`?${params.toString()}`, { scroll: false });
+  };
+
+  // Handle filter changes
+  const handleFilterChange = (key, value) => {
+    const newFilters = { ...filters, [key]: value };
+    setFilters(newFilters);
+  };
+
+  // Handle price range selection
+  const handlePriceChange = (value) => {
+    const selectedRange = priceRanges.find((range) => range.value === value);
+    if (selectedRange) {
+      const newFilters = {
+        ...filters,
+        min_price: selectedRange.min.toString(),
+        max_price: selectedRange.max.toString(),
+      };
+      setFilters(newFilters);
+      updateURL(newFilters);
+    }
+  };
+
+  // Handle search
+  const handleSearch = () => {
+    updateURL(filters);
+  };
+
+  // Handle Enter key press
+  const handleKeyPress = (e) => {
+    if (e.key === 'Enter') {
+      handleSearch();
     }
   };
 
   return (
-    <div className="bg-gray-50 p-4 rounded-lg mb-8">
-      <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-4">
+    <div className="bg-gray-50 border border-gray-200 rounded-lg p-4 mb-8">
+      <div className="flex flex-col lg:flex-row items-center justify-between gap-4">
+        {/* Left side - Price and Type filters */}
         <div className="flex flex-wrap items-center gap-3">
           {/* Price Filter */}
-          <Select
-            value={filters.price}
-            onValueChange={(value) =>
-              setFilters((prev) => ({ ...prev, price: value }))
-            }
-          >
-            <SelectTrigger className="w-[120px] h-10 bg-white border border-gray-300 hover:border-gray-400 focus:border-blue-500">
+          <Select onValueChange={handlePriceChange}>
+            <SelectTrigger className="w-[140px] bg-white">
               <SelectValue placeholder="Price" />
             </SelectTrigger>
             <SelectContent>
-              {priceOptions.map((option) => (
-                <SelectItem key={option.value} value={option.value}>
-                  {option.label}
+              {priceRanges.map((range) => (
+                <SelectItem key={range.value} value={range.value}>
+                  {range.label}
                 </SelectItem>
               ))}
             </SelectContent>
@@ -71,103 +113,43 @@ const FilterSection = ({
 
           {/* Type Filter */}
           <Select
-            value={filters.type}
-            onValueChange={(value) =>
-              setFilters((prev) => ({ ...prev, type: value }))
-            }
+            value={filters.trailer_type_id}
+            onValueChange={(value) => {
+              handleFilterChange('trailer_type_id', value);
+              updateURL({ ...filters, trailer_type_id: value });
+            }}
           >
-            <SelectTrigger className="w-[130px] h-10 bg-white border border-gray-300 hover:border-gray-400 focus:border-blue-500">
-              <SelectValue placeholder="Equipment" />
+            <SelectTrigger className="w-[160px] bg-white">
+              <SelectValue placeholder="Type" />
             </SelectTrigger>
             <SelectContent>
-              {typeOptions.map((option) => (
-                <SelectItem key={option.value} value={option.value}>
-                  {option.label}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-
-          {/* Search Input - Always Visible */}
-          <div className="relative">
-            <div className="flex items-center bg-white border border-gray-300 rounded-md hover:border-gray-400 focus-within:border-blue-500 transition-colors">
-              <input
-                type="text"
-                placeholder="Keyword Search"
-                value={filters.search}
-                onChange={(e) =>
-                  setFilters((prev) => ({ ...prev, search: e.target.value }))
-                }
-                className="w-[180px] h-10 px-3 pr-8 text-sm focus:outline-none bg-transparent"
-              />
-              <ChevronDown className="w-4 h-4 text-gray-500 absolute right-3" />
-            </div>
-          </div>
-
-          {/* Additional Keyword Search Button */}
-          <div className="relative">
-            {!showSearchInput ? (
-              <button
-                onClick={handleSearchToggle}
-                className="flex items-center h-10 px-3 bg-white border border-gray-300 rounded-md hover:border-gray-400 focus:border-blue-500 transition-colors text-sm text-gray-700"
-              >
-                <span>Keyword Search</span>
-                <ChevronDown className="w-4 h-4 ml-2 text-gray-500" />
-              </button>
-            ) : (
-              <div className="flex items-center">
-                <div className="bg-white border border-gray-300 rounded-md hover:border-gray-400 focus-within:border-blue-500 transition-colors">
-                  <input
-                    type="text"
-                    placeholder="Enter keywords..."
-                    value={filters.search}
-                    onChange={(e) =>
-                      setFilters((prev) => ({
-                        ...prev,
-                        search: e.target.value,
-                      }))
-                    }
-                    className="w-[200px] h-10 px-3 text-sm focus:outline-none"
-                    autoFocus
-                  />
-                </div>
-                <button
-                  onClick={handleSearchToggle}
-                  className="ml-2 p-1 hover:bg-gray-200 rounded-full transition-colors"
-                >
-                  <X className="w-4 h-4 text-gray-500" />
-                </button>
-              </div>
-            )}
-          </div>
-
-          {/* Location Filter */}
-          <Select
-            value={filters.location}
-            onValueChange={(value) =>
-              setFilters((prev) => ({ ...prev, location: value }))
-            }
-          >
-            <SelectTrigger className="w-[140px] h-10 bg-white border border-gray-300 hover:border-gray-400 focus:border-blue-500">
-              <SelectValue placeholder="California" />
-            </SelectTrigger>
-            <SelectContent>
-              {locationOptions.map((option) => (
-                <SelectItem key={option.value} value={option.value}>
-                  {option.label}
+              {trailerTypes.map((type) => (
+                <SelectItem key={type.value} value={type.value}>
+                  {type.label}
                 </SelectItem>
               ))}
             </SelectContent>
           </Select>
         </div>
 
-        {/* Search Button */}
-        <button
-          onClick={handleSearchToggle}
-          className="flex items-center justify-center w-10 h-10 bg-white border border-gray-300 rounded-md hover:bg-gray-50 hover:border-gray-400 transition-colors"
-        >
-          <Search className="w-5 h-5 text-gray-600" />
-        </button>
+        {/* Right side - Keyword Search */}
+        <div className="flex items-center gap-2 w-full lg:w-auto">
+          <div className="relative flex-1 lg:w-[300px]">
+            <Input
+              type="text"
+              placeholder="Keyword Search"
+              value={filters.keyword}
+              onChange={(e) => handleFilterChange('keyword', e.target.value)}
+              onKeyPress={handleKeyPress}
+              className="w-full bg-white pr-10"
+            />
+          </div>
+
+          {/* Search Button */}
+          <Button onClick={handleSearch} size="icon" className="shrink-0">
+            <Search className="h-4 w-4" />
+          </Button>
+        </div>
       </div>
     </div>
   );

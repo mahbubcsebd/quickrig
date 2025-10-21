@@ -57,7 +57,7 @@ const RentalBooking = ({ data }) => {
           <div className="flex items-center gap-1.5 sm:gap-2 md:gap-3">
             <button
               onClick={() => setIsLiked(!isLiked)}
-              className="flex items-center gap-1 sm:gap-1.5 text-gray-600 hover:text-[#D46F77] transition px-2 py-1.5 sm:px-2.5 sm:py-2 md:px-[10px] md:py-[7px] rounded-lg sm:rounded-[10px] bg-[#FFF0F0]"
+              className="flex items-center gap-1 sm:gap-1.5 text-[#D46F77] transition px-2 py-1.5 sm:px-2.5 sm:py-2 md:px-[10px] md:py-[7px] rounded-lg sm:rounded-[10px] bg-[#FFF0F0]"
             >
               <Heart
                 className={`w-4 h-4 sm:w-[18px] sm:h-[18px] md:w-5 md:h-5 ${

@@ -1,86 +1,111 @@
 'use client';
 
-import { ChevronLeft, ChevronRight, RotateCcw } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { useRouter, useSearchParams } from 'next/navigation';
 
-const Pagination = ({
-  currentPage,
-  setCurrentPage,
-  totalPages,
-  startIndex,
-  itemsPerPage,
-  totalResults,
-}) => {
+const Pagination = ({ currentPage, totalPages, totalResults }) => {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+
+  const handlePageChange = (newPage) => {
+    const params = new URLSearchParams(searchParams);
+    params.set('page', newPage.toString());
+    router.push(`?${params.toString()}`, { scroll: true });
+  };
+
+  const startIndex = (currentPage - 1) * 20 + 1;
+  const endIndex = Math.min(currentPage * 20, totalResults);
+
+  // Generate page numbers to display
+  const getPageNumbers = () => {
+    const pages = [];
+    const maxPagesToShow = 5;
+
+    if (totalPages <= maxPagesToShow) {
+      // Show all pages if total is less than max
+      for (let i = 1; i <= totalPages; i++) {
+        pages.push(i);
+      }
+    } else {
+      // Show smart pagination
+      if (currentPage <= 3) {
+        pages.push(1, 2, 3, 4, '...', totalPages);
+      } else if (currentPage >= totalPages - 2) {
+        pages.push(
+          1,
+          '...',
+          totalPages - 3,
+          totalPages - 2,
+          totalPages - 1,
+          totalPages
+        );
+      } else {
+        pages.push(
+          1,
+          '...',
+          currentPage - 1,
+          currentPage,
+          currentPage + 1,
+          '...',
+          totalPages
+        );
+      }
+    }
+
+    return pages;
+  };
+
+  if (totalPages <= 1) return null;
+
   return (
-    <>
-      <div className="flex items-center justify-between">
-        <button
-          onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
-          disabled={currentPage === 1}
-          className="flex items-center px-4 py-2 text-sm text-gray-600 hover:text-gray-900 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-        >
-          <ChevronLeft className="w-4 h-4 mr-1" />
-          Previous
-        </button>
+    <div className="flex flex-col sm:flex-row items-center justify-between gap-4 mt-8">
+      <p className="text-sm text-gray-600">
+        Showing {startIndex} to {endIndex} of {totalResults} results
+      </p>
 
-        <div className="flex items-center space-x-2">
-          {Array.from({ length: Math.min(totalPages, 4) }, (_, i) => i + 1).map(
-            (page) => (
-              <button
+      <div className="flex items-center gap-2">
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={() => handlePageChange(currentPage - 1)}
+          disabled={currentPage === 1}
+        >
+          <ChevronLeft className="h-4 w-4" />
+          Previous
+        </Button>
+
+        <div className="flex items-center gap-1">
+          {getPageNumbers().map((page, index) =>
+            page === '...' ? (
+              <span key={`ellipsis-${index}`} className="px-2">
+                ...
+              </span>
+            ) : (
+              <Button
                 key={page}
-                onClick={() => setCurrentPage(page)}
-                className={`px-3 py-1 text-sm rounded transition-all duration-200 ${
-                  currentPage === page
-                    ? 'bg-blue-600 text-white shadow-md'
-                    : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'
-                }`}
+                variant={currentPage === page ? 'default' : 'outline'}
+                size="sm"
+                onClick={() => handlePageChange(page)}
+                className="min-w-[40px]"
               >
                 {page}
-              </button>
+              </Button>
             )
           )}
-          {totalPages > 4 && (
-            <>
-              <span className="text-gray-400">...</span>
-              <button
-                onClick={() => setCurrentPage(totalPages)}
-                className={`px-3 py-1 text-sm rounded transition-all duration-200 ${
-                  currentPage === totalPages
-                    ? 'bg-blue-600 text-white shadow-md'
-                    : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'
-                }`}
-              >
-                {totalPages}
-              </button>
-            </>
-          )}
         </div>
 
-        <div className="flex items-center space-x-4">
-          <button className="flex items-center px-4 py-2 bg-gray-800 text-white rounded-md text-sm hover:bg-gray-700 transition-colors">
-            <RotateCcw className="w-4 h-4 mr-2" />
-            Re-center Shift+2
-          </button>
-
-          <button
-            onClick={() =>
-              setCurrentPage((prev) => Math.min(prev + 1, totalPages))
-            }
-            disabled={currentPage === totalPages}
-            className="flex items-center px-4 py-2 text-sm text-gray-600 hover:text-gray-900 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-          >
-            Next
-            <ChevronRight className="w-4 h-4 ml-1" />
-          </button>
-        </div>
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={() => handlePageChange(currentPage + 1)}
+          disabled={currentPage === totalPages}
+        >
+          Next
+          <ChevronRight className="h-4 w-4" />
+        </Button>
       </div>
-
-      {/* Results count */}
-      <div className="mt-4 text-sm text-gray-600 text-center">
-        Showing {startIndex + 1}-
-        {Math.min(startIndex + itemsPerPage, totalResults)} of {totalResults}{' '}
-        results
-      </div>
-    </>
+    </div>
   );
 };
 

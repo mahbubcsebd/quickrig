@@ -153,7 +153,7 @@ export default function SearchBar() {
     params.append('endDate', endDate);
 
     // Navigate to rent-equipment page with query parameters
-    router.push(`/rent-equipment?${params.toString()}`);
+    router.push(`/products?${params.toString()}`);
   };
 
   if (!isLoaded) return <p>Loading...</p>;

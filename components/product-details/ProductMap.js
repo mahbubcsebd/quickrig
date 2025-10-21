@@ -7,7 +7,8 @@ const ProductMap = ({ coordinates, address, city, state, zipCode }) => {
   // Load Google Maps script
   const { isLoaded, loadError } = useLoadScript({
     googleMapsApiKey:
-      process.env.REACT_APP_GOOGLE_MAPS_API_KEY || 'YOUR_API_KEY_HERE',
+      process.env.REACT_APP_GOOGLE_MAPS_API_KEY ||
+      'AIzaSyBLsfAvQX6j_mF_ElU3oelgLFokalRnUxM',
   });
 
   // Map center
@@ -61,7 +62,7 @@ const ProductMap = ({ coordinates, address, city, state, zipCode }) => {
 
   return (
     <div className="product-map-section bg-white rounded-lg overflow-hidden shadow-sm">
-      {/* Map Container */}
+      <h3 className="text-2xl font-semibold text-black mb-5">Map View</h3>
       <div className="w-full h-[400px] md:h-[500px] relative">
         <GoogleMap
           mapContainerStyle={{ width: '100%', height: '100%' }}
@@ -71,17 +72,6 @@ const ProductMap = ({ coordinates, address, city, state, zipCode }) => {
         >
           <Marker position={center} title={city} />
         </GoogleMap>
-      </div>
-
-      {/* Location Info */}
-      <div className="p-6 border-t">
-        <h3 className="text-xl font-bold mb-2">Location</h3>
-        <div className="text-gray-700">
-          {address && <p className="mb-1">{address}</p>}
-          <p>
-            {city}, {state} {zipCode}
-          </p>
-        </div>
       </div>
     </div>
   );

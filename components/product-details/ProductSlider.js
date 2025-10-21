@@ -14,13 +14,15 @@ import 'swiper/css/navigation';
 import 'swiper/css/thumbs';
 import './productSlider.css';
 
-const ProductSlider = ({ product, previewStyle }) => {
+const ProductSlider = ({ images, video_link, previewStyle }) => {
   const [thumbsSwiper, setThumbsSwiper] = useState(null);
-  const { images, video_link } = product;
+
+  // Filter out images with invalid src
+  const validImages = images?.filter((img) => img.src) || [];
 
   return (
     <div className="product-slider">
-      {images && images.length > 0 ? (
+      {validImages.length > 0 ? (
         <div
           className={`w-full lg:rounded-2xl overflow-hidden mb-4 h-[420px] sm:h-[600px] md:h-[880px] lg:h-[550px] xl:h-[530px]: 2xl:h-[900px]`}
         >
@@ -32,11 +34,15 @@ const ProductSlider = ({ product, previewStyle }) => {
             passiveListeners={true}
             className="w-full h-full"
           >
-            {images.map((image, index) => (
-              <SwiperSlide key={index} className="relative">
+            {validImages.map((image, index) => (
+              <SwiperSlide
+                key={image.id || `slide-${index}`}
+                className="relative"
+              >
                 <div className="relative w-full h-full overflow-hidden">
                   <ImageMagnifier
                     src={image.src}
+                    alt={image.alt || `Image ${index + 1}`}
                     width={400}
                     height={550}
                     zoomLevel={2.5}
@@ -47,16 +53,20 @@ const ProductSlider = ({ product, previewStyle }) => {
           </Swiper>
         </div>
       ) : (
-        <Image
-          src={noAvailable}
-          alt="hero slider"
-          width={100}
-          height={100}
-          className="w-full h-full"
-        />
+        <div
+          className={`w-full lg:rounded-2xl overflow-hidden mb-4 h-[420px] sm:h-[600px] md:h-[880px] lg:h-[550px] xl:h-[530px]: 2xl:h-[900px]`}
+        >
+          <Image
+            src={noAvailable}
+            alt="hero slider"
+            width={100}
+            height={100}
+            className="w-full h-full object-cover"
+          />
+        </div>
       )}
       <div className="grid items-stretch grid-cols-12 gap-2 xxl:gap-3">
-        {images && (
+        {validImages.length > 0 && (
           <div className={video_link ? 'col-span-9' : 'col-span-12'}>
             <div
               className={`slider-thumb ${
@@ -74,11 +84,11 @@ const ProductSlider = ({ product, previewStyle }) => {
                 modules={[FreeMode, Navigation, Thumbs]}
                 className="mySwiper"
               >
-                {images.map((thumbImg, index) => (
-                  <SwiperSlide key={index}>
+                {validImages.map((thumbImg, index) => (
+                  <SwiperSlide key={thumbImg.id || `thumb-${index}`}>
                     <Image
                       src={thumbImg.src}
-                      alt="preview slider"
+                      alt={thumbImg.alt || `Thumbnail ${index + 1}`}
                       width={150}
                       height={150}
                       className="w-full h-full"

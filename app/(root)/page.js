@@ -9,16 +9,20 @@ import RentTrailer from '@/components/home/RentTrailer';
 import SearchTrailers from '@/components/home/SearchTrailers';
 import StandsOut from '@/components/home/StandsOut';
 import Unlock from '@/components/home/Unlock';
+import { getFeaturedTrailers, getTypeTrailers } from '@/utils/trailer';
 
-const HomePage = () => {
+const HomePage = async () => {
+  const featuredTrailers = await getFeaturedTrailers();
+  const typesTrailers = await getTypeTrailers();
+
   return (
     <>
       <Hero />
       <Rental />
       <StandsOut />
-      <RentTrailer />
+      <RentTrailer trailers={featuredTrailers.data.trailers} />
       <Unlock />
-      <BrowseType />
+      <BrowseType trailers={featuredTrailers.data.trailers} />
       <CarDetails />
       <HomeBlogs />
       <FaqList />

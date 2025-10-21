@@ -1,8 +1,5 @@
 'use client';
 
-import RentImage1 from '@/assets/images/rent-1.png';
-import RentImage2 from '@/assets/images/rent-2.png';
-import RentImage3 from '@/assets/images/rent-3.png';
 import { Navigation, Pagination } from 'swiper/modules';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import TopTitle from '../TopTitle';
@@ -13,54 +10,8 @@ import 'swiper/css/navigation';
 import 'swiper/css/pagination';
 import RentCard from '../RentCard';
 
-const RentTrailer = () => {
-  const rentImages = [
-    {
-      id: 1,
-      title: 'Commercial Truck',
-      image: RentImage1,
-      url: '/',
-      description:
-        'Heavy-duty commercial trucks for large cargo transportation',
-    },
-    {
-      id: 2,
-      title: 'Car Hauler',
-      image: RentImage2,
-      url: '/',
-      description: 'Specialized car hauler trailers for vehicle transportation',
-    },
-    {
-      id: 3,
-      title: 'Construction Equipment',
-      image: RentImage3,
-      url: '/',
-      description: 'Track loaders and construction equipment for any job site',
-    },
-    {
-      id: 4,
-      title: 'Commercial Truck',
-      image: RentImage1,
-      url: '/',
-      description:
-        'Heavy-duty commercial trucks for large cargo transportation',
-    },
-    {
-      id: 5,
-      title: 'Car Hauler',
-      image: RentImage2,
-      url: '/',
-      description: 'Specialized car hauler trailers for vehicle transportation',
-    },
-    {
-      id: 6,
-      title: 'Construction Equipment',
-      image: RentImage3,
-      url: '/',
-      description: 'Track loaders and construction equipment for any job site',
-    },
-  ];
-
+const RentTrailer = ({ trailers }) => {
+  console.log('helooooooooooooooooooxxxooo ', trailers);
   return (
     <div className="mb-16 lg:mb-[120px]">
       <div className="container">
@@ -102,9 +53,9 @@ const RentTrailer = () => {
             }}
             className="rent-swiper"
           >
-            {rentImages.map((rent) => (
-              <SwiperSlide key={rent.id}>
-                <RentCard rent={rent} />
+            {trailers.map((trailer) => (
+              <SwiperSlide key={trailer.id}>
+                <RentCard trailer={trailer} />
               </SwiperSlide>
             ))}
           </Swiper>
