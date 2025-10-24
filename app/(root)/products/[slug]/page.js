@@ -22,6 +22,8 @@ const ProductDetails = async ({ params }) => {
 
   const trailer = response.data.trailer;
 
+  console.log(trailer);
+
   return (
     <>
       <Banner

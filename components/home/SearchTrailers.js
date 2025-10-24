@@ -1,39 +1,27 @@
-import { MoveRight } from 'lucide-react';
-import Link from 'next/link';
+'use client';
 
-const SearchTrailers = () => {
-  const states = [
-    { id: 1, title: 'Alabama', slug: '/' },
-    { id: 2, title: 'Alaska', slug: '/' },
-    { id: 3, title: 'Arizona', slug: '/' },
-    { id: 4, title: 'Arkansas', slug: '/' },
-    { id: 5, title: 'California', slug: '/' },
-    { id: 6, title: 'Colorado', slug: '/' },
-    { id: 7, title: 'Connecticut', slug: '/' },
-    { id: 8, title: 'Delaware', slug: '/' },
-    { id: 9, title: 'Florida', slug: '/' },
-    { id: 10, title: 'Georgia', slug: '/' },
-    { id: 11, title: 'Hawaii', slug: '/' },
-    { id: 12, title: 'Idaho', slug: '/' },
-    { id: 13, title: 'Illinois', slug: '/' },
-    { id: 14, title: 'Indiana', slug: '/' },
-    { id: 15, title: 'Iowa', slug: '/' },
-    { id: 16, title: 'Kansas', slug: '/' },
-    { id: 17, title: 'Kentucky', slug: '/' },
-    { id: 18, title: 'Louisiana', slug: '/' },
-    { id: 19, title: 'Maine', slug: '/' },
-    { id: 20, title: 'Maryland', slug: '/' },
-    { id: 21, title: 'Massachusetts', slug: '/' },
-    { id: 22, title: 'Michigan', slug: '/' },
-    { id: 23, title: 'Minnesota', slug: '/' },
-    { id: 24, title: 'Mississippi', slug: '/' },
-    { id: 25, title: 'Missouri', slug: '/' },
-    { id: 26, title: 'Montana', slug: '/' },
-    { id: 27, title: 'Nebraska', slug: '/' },
-    { id: 28, title: 'Nevada', slug: '/' },
-    { id: 29, title: 'New Hampshire', slug: '/' },
-    { id: 30, title: 'New Jersey', slug: '/' },
-  ];
+import { ChevronDown, MoveRight } from 'lucide-react';
+import Link from 'next/link';
+import { useState } from 'react';
+
+const SearchTrailers = ({ states }) => {
+  const [expandedState, setExpandedState] = useState(null);
+
+  const buildLocationLink = (location, latitude, longitude) => {
+    const params = new URLSearchParams();
+    params.set('location', location);
+    params.set('latitude', latitude.toString());
+    params.set('longitude', longitude.toString());
+    return `/products?${params.toString()}`;
+  };
+
+  const toggleState = (stateId) => {
+    setExpandedState(expandedState === stateId ? null : stateId);
+  };
+
+  if (!states) return null;
+
+  console.log(states);
 
   return (
     <div className="my-16 lg:my-[120px]">
@@ -47,25 +35,67 @@ const SearchTrailers = () => {
                 </h2>
               </div>
               <Link
-                href="/"
+                href="/products"
                 className="text-lg md:text-xl text-white font-medium bg-[#CF9645] hover:bg-[#B8844A] transition-colors px-6 md:px-8 py-3 md:py-4 rounded flex justify-center items-center gap-2 whitespace-nowrap w-fit"
               >
                 View All
               </Link>
             </div>
           </div>
-          <ul className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-6 gap-5">
-            {states.map((state) => (
-              <li key={state.id}>
-                <Link
-                  href={`/state/${state.slug}`}
-                  className="text-black text-lg lg:text-[22px] font-medium flex items-center gap-2 bg-[#FAFAFA] p-4 w-full rounded-md"
-                >
-                  {state.title} <MoveRight className="w-4 h-4 mt-1" />
-                </Link>
-              </li>
+          <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-6 gap-5">
+            {states?.map((state) => (
+              <div key={state.id} className="flex flex-col gap-2">
+                {/* State Link */}
+                <div className="relative">
+                  <Link
+                    href={buildLocationLink(
+                      `${state.name}, ${state.code}`,
+                      state.latitude,
+                      state.longitude
+                    )}
+                    className="text-black text-lg lg:text-[22px] font-medium flex items-center gap-2 bg-[#FAFAFA] hover:bg-gray-100 transition-colors p-4 w-full rounded-md"
+                  >
+                    {state.name} <MoveRight className="w-4 h-4 mt-1" />
+                  </Link>
+
+                  {/* Cities Toggle (if cities exist) */}
+                  {state.cities && state.cities.length > 0 && (
+                    <button
+                      onClick={() => toggleState(state.id)}
+                      className="absolute right-2 top-1/2 -translate-y-1/2 p-1 hover:bg-gray-200 rounded"
+                    >
+                      <ChevronDown
+                        className={`w-4 h-4 transition-transform ${
+                          expandedState === state.id ? 'rotate-180' : ''
+                        }`}
+                      />
+                    </button>
+                  )}
+                </div>
+
+                {/* Cities List */}
+                {expandedState === state.id &&
+                  state.cities &&
+                  state.cities.length > 0 && (
+                    <div className="pl-4 flex flex-col gap-1">
+                      {state.cities.map((city) => (
+                        <Link
+                          key={city.id}
+                          href={buildLocationLink(
+                            `${city.name}, ${state.code}`,
+                            city.latitude,
+                            city.longitude
+                          )}
+                          className="text-sm text-gray-600 hover:text-[#CF9645] transition-colors py-1"
+                        >
+                          • {city.name}
+                        </Link>
+                      ))}
+                    </div>
+                  )}
+              </div>
             ))}
-          </ul>
+          </div>
         </div>
       </div>
     </div>

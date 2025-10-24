@@ -1,6 +1,7 @@
 'use client';
 
 import { Heart, Share2, Star } from 'lucide-react';
+import Link from 'next/link';
 import { useState } from 'react';
 import ProductDimensions from './ProductDimensions';
 import ProductMap from './ProductMap';
@@ -146,7 +147,7 @@ const ProductDetailsContent = ({ trailer }) => {
             <div className="product-details-content bg-white">
               {/* Header Section */}
               <div className="mb-4 pb-4 border-b">
-                <div className="flex flex-col xxl:flex-row items-start gap-4 mb-3">
+                <div className="flex flex-col xl:flex-row items-start gap-4 mb-3">
                   <h2 className="text-xl md:text-[28px] font-semibold text-black">
                     {trailer.title}
                   </h2>
@@ -280,9 +281,12 @@ const ProductDetailsContent = ({ trailer }) => {
                 <button className="px-4 py-3 text-sm border border-black text-black rounded-lg font-semibold transition">
                   Chat With Host
                 </button>
-                <button className="px-5 py-4 text-sm bg-[#B07828] border border-[#B07828] text-white rounded-lg font-semibold transition">
+                <Link
+                  href="/checkout"
+                  className="px-5 py-4 text-sm bg-[#B07828] border border-[#B07828] text-white rounded-lg font-semibold transition flex justify-center"
+                >
                   Continue
-                </button>
+                </Link>
               </div>
 
               {/* Description */}

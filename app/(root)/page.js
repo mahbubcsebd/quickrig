@@ -9,11 +9,13 @@ import RentTrailer from '@/components/home/RentTrailer';
 import SearchTrailers from '@/components/home/SearchTrailers';
 import StandsOut from '@/components/home/StandsOut';
 import Unlock from '@/components/home/Unlock';
+import { getAllStates } from '@/utils/states';
 import { getFeaturedTrailers, getTypeTrailers } from '@/utils/trailer';
 
 const HomePage = async () => {
   const featuredTrailers = await getFeaturedTrailers();
   const typesTrailers = await getTypeTrailers();
+  const statesData = await getAllStates();
 
   return (
     <>
@@ -27,7 +29,7 @@ const HomePage = async () => {
       <HomeBlogs />
       <FaqList />
       <FeaturedLocations />
-      <SearchTrailers />
+      <SearchTrailers states={statesData.data.states} />
     </>
   );
 };

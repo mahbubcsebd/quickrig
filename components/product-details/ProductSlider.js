@@ -14,8 +14,42 @@ import 'swiper/css/navigation';
 import 'swiper/css/thumbs';
 import './productSlider.css';
 
-const ProductSlider = ({ images, video_link, previewStyle }) => {
+const ProductSlider = ({ previewStyle }) => {
   const [thumbsSwiper, setThumbsSwiper] = useState(null);
+
+  // Static images array with container truck images from Unsplash
+  const images = [
+    {
+      id: 1,
+      src: 'https://images.unsplash.com/photo-1601584115197-04ecc0da31d7?w=800&q=80',
+      alt: 'Container truck on highway',
+    },
+    {
+      id: 2,
+      src: 'https://images.unsplash.com/photo-1578575437130-527eed3abbec?w=800&q=80',
+      alt: 'Shipping containers on truck',
+    },
+    {
+      id: 3,
+      src: 'https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?w=800&q=80',
+      alt: 'Container transport vehicle',
+    },
+    {
+      id: 4,
+      src: 'https://images.unsplash.com/photo-1519003722824-194d4455a60c?w=800&q=80',
+      alt: 'Freight container truck',
+    },
+    {
+      id: 5,
+      src: 'https://images.unsplash.com/photo-1566933293069-b55c7f326dd4?w=800&q=80',
+      alt: 'Container delivery truck',
+    },
+    {
+      id: 6,
+      src: 'https://images.unsplash.com/photo-1580674285054-bed31e145f59?w=800&q=80',
+      alt: 'Industrial container truck',
+    },
+  ];
 
   // Filter out images with invalid src
   const validImages = images?.filter((img) => img.src) || [];
@@ -29,7 +63,10 @@ const ProductSlider = ({ images, video_link, previewStyle }) => {
           <Swiper
             spaceBetween={10}
             navigation={true}
-            thumbs={{ swiper: thumbsSwiper }}
+            thumbs={{
+              swiper:
+                thumbsSwiper && !thumbsSwiper.destroyed ? thumbsSwiper : null,
+            }}
             modules={[FreeMode, Navigation, Thumbs]}
             passiveListeners={true}
             className="w-full h-full"
@@ -67,7 +104,7 @@ const ProductSlider = ({ images, video_link, previewStyle }) => {
       )}
       <div className="grid items-stretch grid-cols-12 gap-2 xxl:gap-3">
         {validImages.length > 0 && (
-          <div className={video_link ? 'col-span-9' : 'col-span-12'}>
+          <div className="col-span-12">
             <div
               className={`slider-thumb ${
                 previewStyle === 'landscape' ? 'landscape-thumb' : ''
@@ -76,7 +113,7 @@ const ProductSlider = ({ images, video_link, previewStyle }) => {
               <Swiper
                 onSwiper={setThumbsSwiper}
                 spaceBetween={10}
-                slidesPerView={video_link ? 3 : 4}
+                slidesPerView={4}
                 freeMode={true}
                 navigation={true}
                 watchSlidesProgress={true}
@@ -91,7 +128,7 @@ const ProductSlider = ({ images, video_link, previewStyle }) => {
                       alt={thumbImg.alt || `Thumbnail ${index + 1}`}
                       width={150}
                       height={150}
-                      className="w-full h-full"
+                      className="w-full h-full object-cover cursor-pointer"
                     />
                   </SwiperSlide>
                 ))}
